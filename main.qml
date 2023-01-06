@@ -136,6 +136,9 @@ ApplicationWindow {
                         color: delegateNameRow.ListView.isCurrentItem ? "white" : "black"
                         leftPadding: 8
                         anchors.verticalCenter: parent.verticalCenter
+                        width: 280
+                        maximumLineCount: 1
+                        elide: Text.ElideRight
                     }
                 }
 
@@ -189,17 +192,22 @@ ApplicationWindow {
         }
         handle: Item{}
         onMoved: {
-            playerModel.pause()
-            songPosition = value
-            root.positionAdjusted(songPosition)
-            if (value < 400){
-                playerModel.play()
-                isPlaying = true
-                playButtonImage.source = pauseButtonUrl
-                songTimer.running = true
-                animation.paused = false
+            if (currentSongIndex < 0) {
+                console.log("Position adjusted, but no song is selected")
+                value = 0
+            } else{
+                playerModel.pause()
+                songPosition = value
+                root.positionAdjusted(songPosition)
+                if (value < 400){
+                    playerModel.play()
+                    isPlaying = true
+                    playButtonImage.source = pauseButtonUrl
+                    songTimer.running = true
+                    animation.paused = false
+                }
+                console.log("Position adjusted, the position is now: " + songPosition)
             }
-            console.log("Position adjusted, the position is now: " + songPosition)
         }
     }
 
@@ -253,7 +261,7 @@ ApplicationWindow {
             id: animation;
             source: "images/spinning.gif"
             paused: true
-            speed: 0.75
+            speed: 1
         }
     }
 
@@ -341,12 +349,16 @@ ApplicationWindow {
                     songTimer.running = false
                     animation.paused = true
                 } else {
-                    console.log("Clicked on playButton")
-                    playerModel.play()
-                    isPlaying = true
-                    playButtonImage.source = pauseButtonUrl
-                    songTimer.running = true
-                    animation.paused = false
+                    if (currentSongIndex < 0) {
+                        console.log("Clicked on playButton but no song is selected")
+                    } else {
+                        console.log("Clicked on playButton")
+                        playerModel.play()
+                        isPlaying = true
+                        playButtonImage.source = pauseButtonUrl
+                        songTimer.running = true
+                        animation.paused = false
+                    }
                 }
                 if (songPosition >= 400) {
                     playSelectedSong()
