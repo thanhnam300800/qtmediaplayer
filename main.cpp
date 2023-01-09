@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     MusicPlayer* player = new MusicPlayer;
     player->setVolume(50);
 
-    // Read the playlist from T:/User/Music/
-    QDir dir("T:/User/Music/");
+    // Read the playlist from ../qtmediaplayer/music
+    QDir dir("../qtmediaplayer/music");
     QStringList filenamelist = dir.entryList(QStringList() << "*.mp3" << "*.MP3", QDir::Files); // This give us filenames
     // Playlist contains urls
     QStringList playlist;
